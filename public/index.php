@@ -1,37 +1,45 @@
 <?php
+include 'controllers/UserController.php';
 
-use app\controllers\AuthController;
-use app\core\Application;
-use app\controllers\SiteController;
-use app\controllers\TestController;
+$UserController = new UserController();
 
-require_once __DIR__.'/../vendor/autoload.php';
-$dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
-$dotenv->safeLoad();
-
-$config = [
-    'db' => [
-        'dsn' => $_ENV['DB_DSN'],
-        'user' => $_ENV['DB_USER'],
-        'password' => $_ENV['DB_PASSWORD']
-    ]
-    ];
-
-$app = new Application(dirname(__DIR__), $config);
-
-// $app->router->get('/', 'home');
-$app->router->get('/', [new SiteController(), 'home']);
-// $app->router->get('/contact', [SiteController::class, 'contact']);
-$app->router->get('/contact', [new SiteController(), 'contact']);
-$app->router->post('/contact', [SiteController::class, 'handleContact']);
-
-$app->router->get('/login', [AuthController::class, 'login']);
-$app->router->post('/login', [AuthController::class, 'login']);
-$app->router->get('/register', [AuthController::class, 'register']);
-$app->router->post('/register', [AuthController::class, 'register']);
+if (isset($_GET['action'])) {
+    $submit= $_GET['action'];
+    switch ($submit) {
+        case 'listFormateurs':
+            $UserController->listFormateurs();
+            break;
 
 
-$app->router->get('/about', [TestController::class, 'about']);
+        case 'ajouterFormateur': 
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
+                $nom = $_POST['nom'];
+              
+                $prenom = $_POST['prenom'];
+                $email =$_POST['email'];
+                $password = $_POST['password'];
+                $id_class= $_POST['id_class'];
 
-$app->run();
+                $UserController->ajouterFormateur($nom, $prenom,$email, $password,$id_class);
+            }
+            break;
+        case 'updateFormateur':
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $id_utilisateur =$_POST['id_utilisateur'];
+                $nom =$_POST['nom'];
+                $prenom =$_POST['prenom'];
+                $email= $_POST['email'];
+                $password = $_POST['password'];
+                $id_class = $_POST['id_class'];
+
+                $UserController->updateFormateur($id_utilisateur, $nom, $prenom, $email, $password,$id_class);
+            }
+            break;
+        default:
+            $UserController->listUsers();
+            break;
+    }
+} else {
+    $UserController->listUsers();
+}
