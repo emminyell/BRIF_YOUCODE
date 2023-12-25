@@ -13,7 +13,6 @@
 		<div class="col-md-6 mx-auto p-0">
 			<div class="card">
 	<div class="login-box">
-	<?php flash('login') ?>
 	<form method="post" action="./controllers/Users.php">
 		<div class="login-snip">
 			<input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">Login</label>
@@ -41,7 +40,6 @@
 						<a href="#">Forgot Password?</a>
 					</div>
 				</div>
-				<?php flash('register') ?>
 				<form method="post" action="./controllers/Users.php">
 				<div class="sign-up-form">
 				<input type="hidden" name="type" value="register">
